@@ -6,11 +6,12 @@
 #include "engine/renderer/texture.h"
 #include "engine/renderer/material.h"
 #include "engine/renderer/light.h"
+#include "engine/renderer/mesh.h"
 
 #pragma region GL Shader Vector Positions
 const GLfloat positions[] =
 {
-	-0.5f, -0.5f, 0.0f,
+	   -0.5f, -0.5f, 0.0f,
 		0.0f,  0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f
 };
@@ -44,8 +45,8 @@ const GLuint indices[] = {
 static float cube_vertices[] = {
 	// Front
 	-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
+	 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
 	-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
 	// Right
 	1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
@@ -141,12 +142,25 @@ int main(int argc, char** argv)
 
 	#pragma region Vertex Array
 
-		VertexIndexArray vertex_array;
+		//VertexIndexArray vertex_array;
+		VertexArray vertex_array;
 		
-		vertex_array.CreateBuffer(VertexArray::MULTI, sizeof(cube_vertices), sizeof(cube_vertices) / sizeof(GLfloat), (void*)cube_vertices);
-		vertex_array.CreateIndexBuffer(GL_UNSIGNED_SHORT, sizeof(cube_elements) / sizeof(GLushort), (void*)cube_elements);
-		vertex_array.SetAttribute(VertexArray::POSITION, 3, 6 * sizeof(GLfloat), 0);
-		vertex_array.SetAttribute(VertexArray::NORMAL, 3, 6 * sizeof(GLfloat), 3 * sizeof(GLfloat));
+		std::vector<glm::vec3> positions;
+		std::vector<glm::vec3> normals;
+		std::vector<glm::vec2> texcoords;
+		
+		Mesh::Load("meshes/ogre.obj", positions, normals, texcoords);
+
+		if (!positions.empty())
+		{
+			vertex_array.CreateBuffer(VertexArray::POSITION, static_cast<GLsizei>(positions.size() * sizeof(glm::vec3)), static_cast<GLsizei>(positions.size()), (void*)&positions[0]);
+			vertex_array.SetAttribute(VertexArray::POSITION, 3, 0, 0);
+		}
+
+		//vertex_array.CreateBuffer(VertexArray::MULTI, sizeof(cube_vertices), sizeof(cube_vertices) / sizeof(GLfloat), (void*)cube_vertices);
+		//vertex_array.CreateIndexBuffer(GL_UNSIGNED_SHORT, sizeof(cube_elements) / sizeof(GLushort), (void*)cube_elements);
+		//vertex_array.SetAttribute(VertexArray::POSITION, 3, 6 * sizeof(GLfloat), 0);
+		//vertex_array.SetAttribute(VertexArray::NORMAL, 3, 6 * sizeof(GLfloat), 3 * sizeof(GLfloat));
 		//vertex_array.SetAttribute(VertexArray::COLOR, 3, 8 * sizeof(GLfloat), 3 * sizeof(GLfloat));
 		//vertex_array.SetAttribute(VertexArray::TEXCOORD, 2, 8 * sizeof(GLfloat), 6 * sizeof(GLfloat));
 
@@ -177,27 +191,7 @@ int main(int argc, char** argv)
 	
 	#pragma endregion
 
-	#pragma region Old Vertex Source
-		//const char* vertex_source = "#version 430 \n \
-		//layout (location = 0) in vec3 vposition; \n \
-		//layout (location = 1) in vec3 vcolor; \n \
-		//out vec3 fcolor; \n \
-		//void main() \n \
-		//{ \n \
-		//	fcolor = vcolor; \n \
-		//	gl_Position = vec4(vposition, 1.0); \n \
-		//}";
-	#pragma endregion
 
-	#pragma region Old Fragment Source
-		//const char* fragment_source = "#version 430 \n \
-		//in vec3 fcolor; \n \
-		//out vec4 color; \n \
-		//void main() \n \
-		//{ \n \
-		//	color = vec4(fcolor, 1.0); \n \
-		//}";
-	#pragma endregion
 
 	#pragma region Vertex and Fragment Source with Shader Program
 		
