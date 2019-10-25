@@ -7,119 +7,7 @@
 #include "engine/renderer/material.h"
 #include "engine/renderer/light.h"
 #include "engine/renderer/mesh.h"
-
-#pragma region GL Shader Vector Positions
-const GLfloat positions[] =
-{
-	   -0.5f, -0.5f, 0.0f,
-		0.0f,  0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f
-};
-
-const GLfloat colors[] =
-{
-	1.0f, 0.0f, 0.0f,
-	0.0f, 1.0f, 0.0f,
-	0.0f, 0.0f, 1.0f
-};
-
-//const GLfloat vertices[] =
-//{
-//	-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-//	 0.0f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-//	 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
-//};
-
-const GLfloat vertices[] = {
--1.0f,  1.0f, 0.0f, 1.0f, 0.0f, 0.0f, // top-left
-	1.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // top-right
-	1.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom-right
--1.0f, -1.0f, 0.0f, 1.0f, 1.0f, 1.0f  // bottom-left
-};
-
-const GLuint indices[] = {
-	0, 1, 2,
-	2, 3, 0
-};
-
-static float cube_vertices[] = {
-	// Front
-	-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f,
-	// Right
-	1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-	1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-	1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f,
-	1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f,
-	// Back
-	-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-	-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-	1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-	1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f,
-	// Left
-	-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f,
-	-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f,
-	-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f,
-	-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f,
-	// Bottom
-	-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,
-	-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,
-	1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f,
-	1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f,
-	// Top
-	-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f,
-	1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f,
-	-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f
-};
-
-static GLushort cube_elements[] =
-{
-	   0,  1,  2,  0,  2,  3,
-	   4,  5,  6,  4,  6,  7,
-	   8,  9, 10,  8, 10, 11,
-	   12, 13, 14, 12, 14, 15,
-	   16, 17, 18, 16, 18, 19,
-	   20, 21, 22, 20, 22, 23
-};
-
-
-//const GLfloat cube_vertices[] = {
-//	// front
-//	-1.0, -1.0,  1.0, 1.0, 0.0, 0.0, 0.0, 0.0,
-//	 1.0, -1.0,  1.0, 0.0, 1.0, 0.0, 1.0, 0.0,
-//	 1.0,  1.0,  1.0, 0.0, 0.0, 1.0, 1.0, 1.0,
-//	-1.0,  1.0,  1.0, 1.0, 1.0, 1.0, 0.0, 1.0,
-//	// back
-//	-1.0, -1.0, -1.0, 1.0, 0.0, 0.0, 1.0, 0.0,
-//	 1.0, -1.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0,
-//	 1.0,  1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 1.0,
-//	-1.0,  1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0
-//};
-
-//GLushort cube_elements[] = {
-//	// front
-//	0, 1, 2,
-//	2, 3, 0,
-//	// right
-//	1, 5, 6,
-//	6, 2, 1,
-//	// back
-//	7, 6, 5,
-//	5, 4, 7,
-//	// left
-//	4, 0, 3,
-//	3, 7, 4,
-//	// bottom
-//	4, 5, 1,
-//	1, 0, 4,
-//	// top
-//	3, 2, 6,
-//	6, 7, 3
-//};
-#pragma endregion
+#include "engine/math/math.h"
 
 int main(int argc, char** argv)
 {
@@ -142,7 +30,6 @@ int main(int argc, char** argv)
 
 	#pragma region Vertex Array
 
-		//VertexIndexArray vertex_array;
 		VertexArray vertex_array;
 		
 		std::vector<glm::vec3> positions;
@@ -151,11 +38,38 @@ int main(int argc, char** argv)
 		
 		Mesh::Load("meshes/ogre.obj", positions, normals, texcoords);
 
+		if (normals.empty())
+		{
+			for (size_t i = 0; i < positions.size() - 2; i += 3)
+			{
+				glm::vec3 normal = math::calculate_normal(positions[i], positions[i + 1], positions[i + 2]);
+
+				normals.push_back(normal);
+				normals.push_back(normal);
+				normals.push_back(normal);
+			}
+		}
+		//glm::mat3 rotate = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		//math::transform(positions, rotate);
+		//math::transform(normals, rotate);
+
 		if (!positions.empty())
 		{
 			vertex_array.CreateBuffer(VertexArray::POSITION, static_cast<GLsizei>(positions.size() * sizeof(glm::vec3)), static_cast<GLsizei>(positions.size()), (void*)&positions[0]);
 			vertex_array.SetAttribute(VertexArray::POSITION, 3, 0, 0);
 		}
+		if (!normals.empty())
+		{
+			vertex_array.CreateBuffer(VertexArray::NORMAL, static_cast<GLsizei>(normals.size() * sizeof(glm::vec3)), static_cast<GLsizei>(normals.size()), (void*)&normals[0]);
+			vertex_array.SetAttribute(VertexArray::NORMAL, 3, 0, 0);
+		}
+		if (!texcoords.empty())
+		{
+			vertex_array.CreateBuffer(VertexArray::TEXCOORD, static_cast<GLsizei>(texcoords.size() * sizeof(glm::vec2)), static_cast<GLsizei>(texcoords.size()), (void*)&texcoords[0]);
+			vertex_array.SetAttribute(VertexArray::TEXCOORD, 2, 0, 0);
+		}
+
+
 
 		//vertex_array.CreateBuffer(VertexArray::MULTI, sizeof(cube_vertices), sizeof(cube_vertices) / sizeof(GLfloat), (void*)cube_vertices);
 		//vertex_array.CreateIndexBuffer(GL_UNSIGNED_SHORT, sizeof(cube_elements) / sizeof(GLushort), (void*)cube_elements);
@@ -166,8 +80,8 @@ int main(int argc, char** argv)
 
 		Material material;
 		material.program = new Program();
-		material.program->CreateShaderFromFile("shaders/phong.vert", GL_VERTEX_SHADER);
-		material.program->CreateShaderFromFile("shaders/phong.frag", GL_FRAGMENT_SHADER);
+		material.program->CreateShaderFromFile("shaders/texture_phong.vert", GL_VERTEX_SHADER);
+		material.program->CreateShaderFromFile("shaders/texture_phong.frag", GL_FRAGMENT_SHADER);
 		material.program->Link();
 		material.program->Use();
 
@@ -179,6 +93,9 @@ int main(int argc, char** argv)
 		material.diffuse = glm::vec3(0.2f, 0.2f, 1.0f);
 		material.specular = glm::vec3(1.0f);
 		material.shininess = 32.0f;
+
+		Texture* texture = new Texture();
+		texture->CreateTexture("textures/ogre_diffuse.bmp");
 
 		material.Update();
 		material.Use();

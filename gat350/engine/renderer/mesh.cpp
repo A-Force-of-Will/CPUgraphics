@@ -29,62 +29,31 @@ bool Mesh::Load(const std::string& filename, std::vector<glm::vec3>& positions, 
 
 			mesh_positions.push_back(position);
 		}
-		else if (line.substr(0, 2) == "vn ")
+		else if (line.substr(0, 3) == "vn ")
 		{
 			std::istringstream string_stream(line.substr(2));
 
-			glm::vec3 position; 
+			glm::vec3 normals; 
 			
-			string_stream >> position.x;
+			string_stream >> normals.x;
 
-			string_stream >> position.y;
+			string_stream >> normals.y;
 
-			string_stream >> position.z;
+			string_stream >> normals.z;
 
-			mesh_positions.push_back(position);
+			mesh_normals.push_back(normals);
 		}
-		else if (line.substr(0, 2) == "vt ")
+		else if (line.substr(0, 3) == "vt ")
 		{
 			std::istringstream string_stream(line.substr(2));
 
-			glm::vec3 position; 
+			glm::vec2 texcoord; 
 			
-			string_stream >> position.x;
+			string_stream >> texcoord.x;
 
-			string_stream >> position.y;
+			string_stream >> texcoord.y;
 
-			string_stream >> position.z;
-
-			mesh_positions.push_back(position);
-		}
-		else if (line.substr(0, 2) == "f ")
-		{
-			std::istringstream string_stream(line.substr(2));
-
-			glm::vec3 position; 
-			
-			string_stream >> position.x;
-
-			string_stream >> position.y;
-
-			string_stream >> position.z;
-
-			mesh_positions.push_back(position);
-		}
-
-		if (line.substr(0, 3) == "vn ")
-		{
-			std::istringstream string_stream(line.substr(3));
-
-			glm::vec3 position; 
-			
-			string_stream >> position.x;
-
-			string_stream >> position.y;
-			
-			string_stream >> position.z;
-
-			mesh_positions.push_back(position);
+			mesh_texcoords.push_back(texcoord);
 		}
 
 		if (line.substr(0, 2) == "f ") 

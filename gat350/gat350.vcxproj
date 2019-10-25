@@ -146,6 +146,7 @@
     <ClCompile Include="core\string.cpp" />
     <ClCompile Include="core\timer.cpp" />
     <ClCompile Include="engine\input\input.cpp" />
+    <ClCompile Include="engine\math\math.cpp" />
     <ClCompile Include="engine\renderer\light.cpp" />
     <ClCompile Include="engine\renderer\material.cpp" />
     <ClCompile Include="engine\renderer\mesh.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="core\types.h" />
     <ClInclude Include="engine\engine.h" />
     <ClInclude Include="engine\input\input.h" />
+    <ClInclude Include="engine\math\math.h" />
     <ClInclude Include="engine\renderer\light.h" />
     <ClInclude Include="engine\renderer\material.h" />
     <ClInclude Include="engine\renderer\mesh.h" />
@@ -194,6 +196,8 @@
     <None Include="builds\content\shaders\phong.vert" />
     <None Include="builds\content\shaders\texture.frag" />
     <None Include="builds\content\shaders\texture.vert" />
+    <None Include="builds\content\shaders\texture_phong.frag" />
+    <None Include="builds\content\shaders\texture_phong.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
