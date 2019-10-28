@@ -49,6 +49,6 @@ void main()
 		specular = light.specular * material.specular * intensity;
 	}
 
-	color = texture(texture_sample, ftexcoord);
+	color = vec4(ambient + diffuse, 1.0f) * texture(texture_sample, ftexcoord) + vec4(specular, 1.0f);
 //	color = vec4(ambient + diffuse + specular, 1.0);
 }

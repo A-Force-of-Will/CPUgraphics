@@ -8,6 +8,7 @@
 #include "engine/renderer/light.h"
 #include "engine/renderer/mesh.h"
 #include "engine/math/math.h"
+#include "engine/renderer/gui.h"
 
 int main(int argc, char** argv)
 {
@@ -21,11 +22,16 @@ int main(int argc, char** argv)
 			SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		}
 
+
 		std::shared_ptr<Input> input = std::make_shared<Input>();
 		input->Initialize();
 
 		std::shared_ptr<Renderer> renderer = std::make_shared<Renderer>();
-		renderer->Initialize(800, 600);
+		renderer->Initialize(1280, 720);
+
+
+		
+		GUI::Initialize(renderer.get());
 	#pragma endregion
 
 	#pragma region Vertex Array
@@ -79,25 +85,23 @@ int main(int argc, char** argv)
 		//vertex_array.SetAttribute(VertexArray::TEXCOORD, 2, 8 * sizeof(GLfloat), 6 * sizeof(GLfloat));
 
 		Material material;
-		material.program = new Program();
-		material.program->CreateShaderFromFile("shaders/texture_phong.vert", GL_VERTEX_SHADER);
-		material.program->CreateShaderFromFile("shaders/texture_phong.frag", GL_FRAGMENT_SHADER);
-		material.program->Link();
-		material.program->Use();
+		Program* shader = new Program();
+		
+		shader->CreateShaderFromFile("shaders/texture_phong.vert", GL_VERTEX_SHADER);
+		shader->CreateShaderFromFile("shaders/texture_phong.frag", GL_FRAGMENT_SHADER);
+		shader->Link();
+		shader->Use();
 
-		//Texture* texture = new Texture();
-		//texture->CreateTexture("textures/nc.bmp");
-		//material.textures.push_back(texture);
 
 		material.ambient = glm::vec3(1.0f);
-		material.diffuse = glm::vec3(0.2f, 0.2f, 1.0f);
+		material.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
 		material.specular = glm::vec3(1.0f);
-		material.shininess = 32.0f;
+		material.shininess = 64.0f;
 
 		Texture* texture = new Texture();
 		texture->CreateTexture("textures/ogre_diffuse.bmp");
 
-		material.Update();
+		material.SetShader(shader);
 		material.Use();
 
 		Light light;
@@ -114,7 +118,7 @@ int main(int argc, char** argv)
 		
 		glm::vec3 eye = glm::vec3(0.0f, 0.0f, 5.0f);
 		glm::mat4 mxView = glm::lookAt(eye, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		glm::mat4 mxProjection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.01f, 1000.0f);
+		glm::mat4 mxProjection = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 0.01f, 1000.0f);
 		
 		glm::mat4 mxTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 		glm::mat4 mxRotate = glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -155,14 +159,25 @@ int main(int argc, char** argv)
 			glm::mat4 mxModel = mxTranslate * mxRotate;
 
 			glm::mat4 model_view_matrix = mxView * mxModel;
-			material.program->SetUniform("model_view_matrix", model_view_matrix);
+			shader->SetUniform("model_view_matrix", model_view_matrix);
 			
 			glm::mat4 mvp_matrix = mxProjection * model_view_matrix;
-			material.program->SetUniform("mvp_matrix", mvp_matrix);
+			shader->SetUniform("mvp_matrix", mvp_matrix);
+			
+			material.SetShader(shader);
+			light.SetShader(shader, mxView);
 
-			light.SetShader(material.program, mxView);
+			GUI::Update(event);
+			GUI::Begin(renderer.get());
+
+			ImGui::Text("Hello world");
+			light.Edit();
+			material.Edit();
+			
+			GUI::End();
 			
 			renderer->ClearBuffer();
+			GUI::Draw();
 			vertex_array.Draw();
 			renderer->SwapBuffer();
 		}
@@ -170,6 +185,9 @@ int main(int argc, char** argv)
 	#pragma endregion
 
 	#pragma region Exit and cleanup
+		GUI::Shutdown();
+		delete shader;
+		material.Destroy();
 		material.Destroy();
 		renderer->Shutdown();
 		input->Shutdown();

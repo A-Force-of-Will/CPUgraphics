@@ -23,6 +23,9 @@
     <Filter Include="source\engine\math">
       <UniqueIdentifier>{11e9c6fc-37a5-442d-af4b-c9c0fc8b9108}</UniqueIdentifier>
     </Filter>
+    <Filter Include="external">
+      <UniqueIdentifier>{540fd511-a98a-4943-825c-2300092dcc2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,9 +76,6 @@
     <ClCompile Include="engine\renderer\material.cpp">
       <Filter>source\engine\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="..\external\glad\src\glad.c">
-      <Filter>source\engine</Filter>
-    </ClCompile>
     <ClCompile Include="engine\renderer\renderer.cpp">
       <Filter>source\engine\renderer</Filter>
     </ClCompile>
@@ -87,6 +87,27 @@
     </ClCompile>
     <ClCompile Include="engine\math\math.cpp">
       <Filter>source\engine\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\glad\src\glad.c">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_draw.cpp">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_widgets.cpp">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui.cpp">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\examples\imgui_impl_sdl.cpp">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\examples\imgui_impl_opengl3.cpp">
+      <Filter>external</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\renderer\gui.cpp">
+      <Filter>source\engine\renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +194,9 @@
     </ClInclude>
     <ClInclude Include="engine\math\math.h">
       <Filter>source\engine\math</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\renderer\gui.h">
+      <Filter>source\engine\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
