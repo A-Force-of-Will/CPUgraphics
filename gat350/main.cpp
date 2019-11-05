@@ -88,7 +88,7 @@ int main(int argc, char** argv)
 		Program* shader = new Program();
 		
 		shader->CreateShaderFromFile("shaders/texture_phong.vert", GL_VERTEX_SHADER);
-		shader->CreateShaderFromFile("shaders/texture_phong.frag", GL_FRAGMENT_SHADER);
+		shader->CreateShaderFromFile("shaders/texture_phong_fog.frag", GL_FRAGMENT_SHADER);
 		shader->Link();
 		shader->Use();
 
@@ -126,6 +126,8 @@ int main(int argc, char** argv)
 	#pragma endregion
 
 	#pragma region Render Loop
+		int steps = 4;
+		
 		bool quit = false;
 		while (!quit)
 		{
@@ -163,9 +165,15 @@ int main(int argc, char** argv)
 			
 			glm::mat4 mvp_matrix = mxProjection * model_view_matrix;
 			shader->SetUniform("mvp_matrix", mvp_matrix);
+
+
 			
-			material.SetShader(shader);
 			light.SetShader(shader, mxView);
+			material.SetShader(shader);
+			shader->SetUniform("steps", steps);
+			shader->SetUniform("fog.min_distance", 10.0f);
+			shader->SetUniform("fog.max_distance", 30.0f);
+			shader->SetUniform("fog.color", glm::vec3(.85));
 
 			GUI::Update(event);
 			GUI::Begin(renderer.get());
@@ -173,7 +181,8 @@ int main(int argc, char** argv)
 			ImGui::Text("Hello world");
 			light.Edit();
 			material.Edit();
-			
+			ImGui::Button("Pause");
+			ImGui::SliderInt("Steps", &steps, 1.0f, 20.0f);
 			GUI::End();
 			
 			renderer->ClearBuffer();

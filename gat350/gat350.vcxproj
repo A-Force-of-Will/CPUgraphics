@@ -205,6 +205,8 @@
     <None Include="builds\content\shaders\texture.vert" />
     <None Include="builds\content\shaders\texture_phong.frag" />
     <None Include="builds\content\shaders\texture_phong.vert" />
+    <None Include="builds\content\shaders\texture_phong_fog.frag" />
+    <None Include="builds\content\shaders\toon.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
